@@ -16,7 +16,7 @@ import { PAYMENT_SCREEN } from '../../constants/screens';
 export default () => {
   const navigation = useNavigation();
   const route = useRoute();
-  const service = route.params.service;
+  const { service, countCartItems } = route.params;
 
   const iconLeft = (
     <Icon name="chevron-left" type="font-awesome-5" color={BLACK} size={20} />
@@ -39,6 +39,7 @@ export default () => {
         color={LIGHT_PEACH}
         iconRight={iconRight}
         leftPress={navigation.goBack}
+        countCartItems={countCartItems}
         rightPress={() => navigation.navigate(PAYMENT_SCREEN)}
       />
       <ScrollView>

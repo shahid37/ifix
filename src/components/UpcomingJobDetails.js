@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   Modal,
   Alert,
-  Image
+  Image,
 } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { CheckBox, Icon } from 'react-native-elements';
@@ -17,6 +17,7 @@ import { getTimeDifference } from '../utils/time';
 import { Button } from './common';
 import { POINTS } from '../constants/points';
 import ExtraModal from '../components/Modals/ExtraModal';
+import PinLocationModal from '../components/Modals/PinLocationModal';
 import {
   BLACK,
   BROWN,
@@ -25,6 +26,7 @@ import {
   LIGHT_PEACH,
   PEACH,
   SOFT_RED,
+  BLUE,
 } from '../constants/colors';
 import { RUBIK_REGULAR, RUBIK_MEDIUM } from '../constants/fonts';
 
@@ -60,7 +62,6 @@ const TermsOfCancellation = ({ modalVisible, setModalVisible }) => {
           <Text style={styles.modalMessage}>
             Det går inte att boka om en tid i appen, Du måste först avboka din
             beställning och sedan boka ett nytt datum & tid.
-
           </Text>
 
           <View style={styles.modalButtonContainer}>
@@ -165,12 +166,7 @@ const JobCancelModal = ({
     </Modal>
   );
 };
-const PictureModal = ({
-  setCancelModalVisible,
-  currentPicture,
-  visible
-  
-}) => {
+const PictureModal = ({ setCancelModalVisible, currentPicture, visible }) => {
   const dispatch = useDispatch();
   return (
     <Modal animationType="fade" transparent={true} visible={visible}>
@@ -185,9 +181,12 @@ const PictureModal = ({
           >
             <Icon name="times" type="font-awesome-5" size={22} />
           </TouchableOpacity>
-<View>
-<Image source={{uri:currentPicture}} style={{height: 200,width: "100%", resizeMode:"cover"}} />
-</View>
+          <View>
+            <Image
+              source={{ uri: currentPicture }}
+              style={{ height: 200, width: '100%', resizeMode: 'cover' }}
+            />
+          </View>
         </View>
       </View>
     </Modal>
@@ -256,14 +255,18 @@ export default ({ booking, service }) => {
   const [response, setResponse] = useState({});
   const [names, setNames] = useState([]);
   const [extraModal, setExtraModal] = useState(false);
-  
+  const [pinLocationModal, setPinLocationModal] = useState(false);
+
   const closeExtraModal = () => {
     setExtraModal(!extraModal);
-  }
-  const enlargePicture = (uri)=>{
-    setCurrentPicture(uri)
-    setModalPictureVisible(true)
-  }
+  };
+  const closepinLocationModal = () => {
+    setPinLocationModal(!pinLocationModal);
+  };
+  const enlargePicture = (uri) => {
+    setCurrentPicture(uri);
+    setModalPictureVisible(true);
+  };
   useEffect(() => {
     const fixers =
       booking.fixers.length !== 0
@@ -287,17 +290,19 @@ export default ({ booking, service }) => {
         ? '0'
         : service?.price * booking.quantity + ' kr'
       : `${service?.prices[booking.quantity - 1]} kr`;
-
+  console.log(
+    booking.service.title,
+    'BOOKING*************',
+    booking.coordinates
+  );
   const address = booking?.place;
   const zipCode = booking?.zip_code;
   const differenceInHours = getTimeDifference(booking.appointment_at);
 
   return (
     <View>
-    <View
-        style={[styles.newUpperContainer, styles.newUpper]}
-      >
-        <View style={{width:"50%"}}>
+      <View style={[styles.newUpperContainer, styles.newUpper]}>
+        <View style={{ width: '50%' }}>
           <View>
             <Text style={styles.topExtra}>EXTRA-FIX</Text>
           </View>
@@ -307,11 +312,25 @@ export default ({ booking, service }) => {
           <View>
             <Text style={styles.f11}>fixaren är hemma hos dig!</Text>
           </View>
-          
         </View>
-        <View style={{width:"50%", justifyContent:"center"}}>
-          <TouchableOpacity onPress={() => setExtraModal(true)} style={{width:"90%", borderRadius:30, backgroundColor:"#FEA88D", height:30, alignItems:"center", justifyContent:"center", alignContent:"center"}}>
-            <Text style={{color:"#fff", fontFamily:RUBIK_REGULAR, fontSize:14}}>Se erbjudanden</Text>
+        <View style={{ width: '50%', justifyContent: 'center' }}>
+          <TouchableOpacity
+            onPress={() => setExtraModal(true)}
+            style={{
+              width: '90%',
+              borderRadius: 30,
+              backgroundColor: '#FEA88D',
+              height: 30,
+              alignItems: 'center',
+              justifyContent: 'center',
+              alignContent: 'center',
+            }}
+          >
+            <Text
+              style={{ color: '#fff', fontFamily: RUBIK_REGULAR, fontSize: 14 }}
+            >
+              Se erbjudanden
+            </Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -319,24 +338,36 @@ export default ({ booking, service }) => {
         style={[styles.upperContainer, names.length > 1 && styles.extraSpace]}
       >
         <View style={styles.imageContainer}>
-
-        {booking.fixers.length > 0 ? 
-        booking.fixers[0].avatar ?
-        <TouchableOpacity onPress={() => enlargePicture(booking.fixers[0].avatar.url)}>
-        <Image source={{uri:booking.fixers[0].avatar.url}} style={{height: 98,width: 98,borderRadius: 50}} />
-        </TouchableOpacity> :
-         <Icon name="image" type="font-awesome-5" color="#000" size={25}   /> : 
-          null
-        }
-        {booking.ambassadors.length > 0 ? 
-        booking.ambassadors[0].avatar ?
-        <TouchableOpacity onPress={() => enlargePicture(booking.ambassadors[0].avatar.url)}>
-        <Image source={{uri:booking.ambassadors[0].avatar.url}} style={{height: 98,width: 98, borderRadius: 50}} /> 
-        </TouchableOpacity>:
-         <Icon name="image" type="font-awesome-5" color="#000" size={25}  /> :
-          null
-          
-        } 
+          {booking.fixers.length > 0 ? (
+            booking.fixers[0].avatar ? (
+              <TouchableOpacity
+                onPress={() => enlargePicture(booking.fixers[0].avatar.url)}
+              >
+                <Image
+                  source={{ uri: booking.fixers[0].avatar.url }}
+                  style={{ height: 98, width: 98, borderRadius: 50 }}
+                />
+              </TouchableOpacity>
+            ) : (
+              <Icon name="image" type="font-awesome-5" color="#000" size={25} />
+            )
+          ) : null}
+          {booking.ambassadors.length > 0 ? (
+            booking.ambassadors[0].avatar ? (
+              <TouchableOpacity
+                onPress={() =>
+                  enlargePicture(booking.ambassadors[0].avatar.url)
+                }
+              >
+                <Image
+                  source={{ uri: booking.ambassadors[0].avatar.url }}
+                  style={{ height: 98, width: 98, borderRadius: 50 }}
+                />
+              </TouchableOpacity>
+            ) : (
+              <Icon name="image" type="font-awesome-5" color="#000" size={25} />
+            )
+          ) : null}
         </View>
 
         {names.length > 1 && (
@@ -359,30 +390,42 @@ export default ({ booking, service }) => {
           </View>
           <View>
             <Text style={styles.heading}>Kommer till</Text>
-            <Text style={styles.desc}>
-              {address}, {zipCode}, 
-            </Text>
+            {booking.service.title === 'Däckbyte hos dig' ||
+            booking.service.title === 'Biltvätten hos dig' ? (
+              <TouchableOpacity
+                onPress={() => {
+                  setPinLocationModal(true);
+                }}
+              >
+                <Text style={styles.pinLocation}>Pin Location</Text>
+              </TouchableOpacity>
+            ) : (
+              <Text style={styles.desc}>
+                {address}, {zipCode},
+              </Text>
+            )}
           </View>
         </View>
       </View>
       <View style={styles.lowerContainer}>
         <View style={styles.pointsContainer}>
-
           <Text style={styles.orderNo}>Ordernr: {booking.id}</Text>
           <Text style={styles.pointsHeading}>Förbered dig såhär:</Text>
-          {POINTS[service.title] ? POINTS[service.title].map((item, index) => (
-            <View key={index} style={styles.row}>
-              <Icon
-                name="circle"
-                type="font-awesome-5"
-                color={BLACK}
-                size={5}
-                solid
-                style={styles.dot}
-              />
-              <Text style={styles.shadedLines}>{item}</Text>
-            </View>
-          )): null}
+          {POINTS[service.title]
+            ? POINTS[service.title].map((item, index) => (
+                <View key={index} style={styles.row}>
+                  <Icon
+                    name="circle"
+                    type="font-awesome-5"
+                    color={BLACK}
+                    size={5}
+                    solid
+                    style={styles.dot}
+                  />
+                  <Text style={styles.shadedLines}>{item}</Text>
+                </View>
+              ))
+            : null}
         </View>
 
         <View style={styles.inlineText}>
@@ -428,7 +471,7 @@ export default ({ booking, service }) => {
         setModalVisible={setModalVisible}
       />
 
-<JobCancelModal
+      <JobCancelModal
         cancelModalVisible={cancelModalVisible}
         setCancelModalVisible={setCancelModalVisible}
         timeDifference={differenceInHours}
@@ -438,7 +481,7 @@ export default ({ booking, service }) => {
         setResponse={setResponse}
       />
 
-<PictureModal
+      <PictureModal
         setCancelModalVisible={() => setModalPictureVisible(false)}
         visible={modalPicture}
         currentPicture={currentPicture}
@@ -450,12 +493,16 @@ export default ({ booking, service }) => {
         timeDifference={differenceInHours}
         response={response}
       />
-        <ExtraModal
+      <ExtraModal
         closeModal={closeExtraModal}
         service_type={service.icon}
         visible={extraModal}
       />
-      
+      <PinLocationModal
+        closeModal={closepinLocationModal}
+        service_type={service.icon}
+        visible={pinLocationModal}
+      />
     </View>
   );
 };
@@ -469,11 +516,11 @@ const styles = StyleSheet.create({
     paddingLeft: 25,
   },
   topExtra: {
-    fontWeight:"bold", 
-    fontFamily:RUBIK_MEDIUM
+    fontWeight: 'bold',
+    fontFamily: RUBIK_MEDIUM,
   },
   f11: {
-    fontSize:11
+    fontSize: 11,
   },
   newUpperContainer: {
     flexDirection: 'row',
@@ -486,7 +533,7 @@ const styles = StyleSheet.create({
     paddingBottom: '10%',
   },
   newUpper: {
-backgroundColor:"#ffe9e2"
+    backgroundColor: '#ffe9e2',
   },
   imageContainer: {
     height: 100,
@@ -496,8 +543,8 @@ backgroundColor:"#ffe9e2"
     borderColor: SOFT_RED,
     backgroundColor: LIGHT_PEACH,
     justifyContent: 'center',
-    alignContent:"center",
-    alignItems:"center",
+    alignContent: 'center',
+    alignItems: 'center',
     marginRight: 15,
   },
   overlapImage: {
@@ -525,6 +572,11 @@ backgroundColor:"#ffe9e2"
     fontFamily: RUBIK_REGULAR,
     fontSize: 13,
     color: DARK_GRAY,
+  },
+  pinLocation: {
+    fontFamily: RUBIK_REGULAR,
+    fontSize: 13,
+    color: BLUE,
   },
   lowerContainer: {
     backgroundColor: LIGHT_PEACH,
@@ -650,13 +702,12 @@ backgroundColor:"#ffe9e2"
   },
   orderNo: {
     fontFamily: RUBIK_REGULAR,
-    fontWeight:"bold",
+    fontWeight: 'bold',
     fontSize: 16,
     color: BLACK,
     marginTop: '5%',
     marginBottom: 5,
-    textAlign:"right"
-   
+    textAlign: 'right',
   },
   shadedLines: {
     fontFamily: RUBIK_REGULAR,
@@ -674,5 +725,3 @@ backgroundColor:"#ffe9e2"
     marginRight: 10,
   },
 });
-
-

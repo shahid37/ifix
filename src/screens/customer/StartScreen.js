@@ -78,10 +78,13 @@ export default () => {
         color={LIGHT_PEACH}
         iconRight={rightIcon}
         leftPress={toggleOverlay}
-        countCartItems={countCartItems.length}
+        countCartItems={countCartItems?.length}
         rightPress={() => navigation.navigate(PAYMENT_SCREEN)}
       />
-      <ServicesList services={services} />
+      <ServicesList
+        services={services}
+        countCartItems={countCartItems?.length}
+      />
       <Overlay
         visible={visible}
         toggle={toggleOverlay}
