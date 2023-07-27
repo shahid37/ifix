@@ -49,7 +49,10 @@ export default () => {
     />
   );
   const headerText = (
-    <Image style={styles.headerLogo} source={require('../../assets/images/logga_ifix-logo.png')} />
+    <Image
+      style={styles.headerLogo}
+      source={require('../../assets/images/logga_ifix-logo.png')}
+    />
   );
   const rightIcon = (
     <Icon
@@ -59,6 +62,7 @@ export default () => {
       size={25}
     />
   );
+  console.log(services, 'servicesservices');
   return (
     <View style={styles.container}>
       <Header
@@ -69,8 +73,7 @@ export default () => {
         leftPress={toggleOverlay}
         rightPress={() => navigation.navigate(PAYMENT_SCREEN)}
       />
-      <ServicesList services={services}
-       />
+      <ServicesList services={services} />
       <Overlay
         visible={visible}
         toggle={toggleOverlay}
@@ -96,6 +99,6 @@ const styles = StyleSheet.create({
   headerLogo: {
     width: 60,
     height: 18,
-    resizeMode: "contain"
-  }
+    resizeMode: 'contain',
+  },
 });

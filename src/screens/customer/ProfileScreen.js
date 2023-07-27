@@ -1,5 +1,11 @@
 import React, { useCallback, useState } from 'react';
-import { StyleSheet, Text, View, ScrollView, RefreshControl } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+  RefreshControl,
+} from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { Icon } from 'react-native-elements';
@@ -21,8 +27,7 @@ export default () => {
   const dispatch = useDispatch();
   const bookings = useSelector((state) => state.bookings);
   const [visible, setVisible] = useState(false);
-  const [refreshing ,setRefreshing] = useState(false)
-
+  const [refreshing, setRefreshing] = useState(false);
 
   const leftIcon = (
     <Icon
@@ -57,12 +62,11 @@ export default () => {
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
   );
-  const onRefresh=()=>{
-    setRefreshing(true)
+  const onRefresh = () => {
+    setRefreshing(true);
     dispatch(getBookings());
-    setRefreshing(false)
- 
-   }
+    setRefreshing(false);
+  };
   return (
     <View style={styles.container}>
       <Header
@@ -73,9 +77,12 @@ export default () => {
         leftPress={toggleOverlay}
         rightPress={() => navigation.navigate(USER_SETTING)}
       />
-      <ScrollView contentContainerStyle={styles.subContainer} refreshControl={
-      <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-    }>
+      <ScrollView
+        contentContainerStyle={styles.subContainer}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
         <UpcomingFix bookings={bookings} />
         <Fixed bookings={bookings} />
       </ScrollView>

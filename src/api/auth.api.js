@@ -17,11 +17,12 @@ const getHeaders = async () => {
   };
 };
 
-export const loginRequest = (email, password) => {
-  return axios.post(`${BASE_URL}/auth/sign_in`, {
+export const loginRequest = async (email, password) => {
+  const res = await axios.post(`${BASE_URL}/auth/sign_in`, {
     email: email,
     password: password,
   });
+  return res;
 };
 
 export const signUpRequest = (data) => {
@@ -84,10 +85,12 @@ export const signUpRequestFixer = (data) => {
 
 export const signOutRequest = async () => {
   const headers = await getHeaders();
-
-  return axios.delete(`${BASE_URL}/auth/sign_out`, {
+  console.log(headers, 'HEADERS**************');
+  const res = await axios.delete(`${BASE_URL}/auth/sign_out`, {
     headers: headers,
   });
+  console.log(res, 'KKKKKKKKKKKKKKKKK');
+  return res;
 };
 
 export const getUserInfo = async () => {
@@ -101,14 +104,15 @@ export const getUserInfo = async () => {
 export const getUserInfo2 = async () => {
   const headers = await getHeaders();
   const result = axios.get(`${BASE_URL}/api/v1/customer/users`, {
-  headers: headers,
-  })
-  return result
-  };
-
+    headers: headers,
+  });
+  return result;
+};
 
 export const getLocationDetail = async (region) => {
-  return axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${region.latitude},${region.longitude}&key=AIzaSyCg88sPKppV592y6PH2K_b5zn7Qmw-qCwc`);
+  return axios.get(
+    `https://maps.googleapis.com/maps/api/geocode/json?address=${region.latitude},${region.longitude}&key=AIzaSyCg88sPKppV592y6PH2K_b5zn7Qmw-qCwc`
+  );
 };
 
 export const updateUserInfo = async (data) => {
@@ -135,7 +139,7 @@ export const updateUserInfo = async (data) => {
 export const sendDeviceId = async () => {
   const headers = await getHeaders();
   const response = await OneSignal.getDeviceState();
- 
+
   axios.put(
     `${BASE_URL}/api/v1/customer/users`,
     {

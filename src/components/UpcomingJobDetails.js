@@ -94,7 +94,7 @@ const JobCancelModal = ({
   const cancelBooking = () => {
     cancelBookingRequest(bookingId)
       .then((res) => {
-        setResponse(res.data);
+        setResponse(bookingId);
         setConfirmationModal(!confirmationModal);
         // dispatch(setBlur(true));
       })

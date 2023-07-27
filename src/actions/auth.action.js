@@ -165,13 +165,17 @@ export const signUpFixer = (data) => {
 
 export const signOut = () => {
   return (dispatch) => {
+    deleteUserTokens();
+    deleteUserSession();
+    dispatch(signOutSuccess());
     signOutRequest()
       .then(() => {
         deleteUserTokens();
         deleteUserSession();
         dispatch(signOutSuccess());
       })
-      .catch(() => {
+      .catch((err) => {
+        console.log(err, 'ERROR***************');
         Alert.alert('Error!', 'Unable to logout');
       });
   };

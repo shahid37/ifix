@@ -18,10 +18,10 @@ export default (state = initialState.bookings, action) => {
 
       return [...new_bookings];
     case types.DELETE_BOOKING:
-      var booking = action.payload;
+      var bookingId = action.payload;
 
       var new_bookings = state;
-      new_bookings = new_bookings.filter((b) => b.id !== booking.id);
+      new_bookings = new_bookings.filter((b) => b.id !== bookingId);
 
       return new_bookings;
     default:
