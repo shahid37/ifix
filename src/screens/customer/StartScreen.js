@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 import { Icon } from 'react-native-elements';
 import { getServices } from '../../actions/services.action';
+import { getBookings } from '../../actions/bookings.action';
 import { Overlay, ServicesList, StartScreenModal } from '../../components';
 import { Blur, Header } from '../../components/common';
 import {
@@ -25,6 +26,7 @@ export default () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const services = useSelector((state) => state.services);
+  const bookings = useSelector((state) => state.bookings);
   const [visible, setVisible] = useState(false);
 
   const toggleOverlay = () => {
@@ -38,6 +40,7 @@ export default () => {
 
   useEffect(() => {
     dispatch(getServices());
+    dispatch(getBookings());
   }, []);
 
   const leftIcon = (
@@ -62,7 +65,11 @@ export default () => {
       size={25}
     />
   );
-  console.log(services, 'servicesservices');
+
+  const countCartItems = bookings.filter(
+    (booking) => booking.status === 'pending'
+  );
+
   return (
     <View style={styles.container}>
       <Header
@@ -71,6 +78,7 @@ export default () => {
         color={LIGHT_PEACH}
         iconRight={rightIcon}
         leftPress={toggleOverlay}
+        countCartItems={countCartItems.length}
         rightPress={() => navigation.navigate(PAYMENT_SCREEN)}
       />
       <ServicesList services={services} />

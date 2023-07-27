@@ -5,18 +5,30 @@ import { getClientToken } from '../../api/bookings.api';
 import { Button } from '../common';
 import { styles } from './style';
 import { PEACH } from '../../constants/colors';
-import { CHECKOUT_API_SCREEN, CHECKOUT_SCREEN, START_SCREEN } from '../../constants/screens';
-export default ({ bookings,terms, setTermsModal }) => {
+import {
+  CHECKOUT_API_SCREEN,
+  CHECKOUT_SCREEN,
+  START_SCREEN,
+} from '../../constants/screens';
+export default ({ bookings, terms, setTermsModal }) => {
   const navigation = useNavigation();
 
   bookings = bookings.filter((booking) => booking.status === 'pending');
 
-  const doPayment = () => {
-    terms ?
-    getClientToken()
-      .then((res) =>
-        navigation.navigate(CHECKOUT_API_SCREEN, { token: res.data.client_token })      )
-      .catch(() => Alert.alert('Error!', 'Unable to get client token')) : setTermsModal(true);
+  const doPayment = async () => {
+    if (terms) {
+      try {
+        const res = await getClientToken();
+        navigation.navigate(CHECKOUT_API_SCREEN, {
+          token: res.data.client_token,
+        });
+      } catch (error) {
+        console.log(error, 'ERROR', error.message);
+        Alert.alert('Error!', 'Unable to get client token');
+      }
+    } else {
+      setTermsModal(true);
+    }
   };
 
   return (

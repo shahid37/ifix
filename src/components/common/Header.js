@@ -10,6 +10,7 @@ export default ({
   leftPress,
   rightPress,
   longText,
+  countCartItems,
 }) => {
   const customStyle = styles({ backgroundColor: color });
 
@@ -23,6 +24,32 @@ export default ({
         <TouchableOpacity onPress={rightPress} style={customStyle.rightIcon}>
           {iconRight}
         </TouchableOpacity>
+        {countCartItems && countCartItems > 0 ? (
+          <View
+            style={{
+              position: 'absolute',
+              backgroundColor:'#EF8C89',
+              width: 16,
+              height: 16,
+              borderRadius: 15 / 2,
+              right: 10,
+              top: +10,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <Text
+              style={{
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: '#FFFFFF',
+                fontSize: 8,
+              }}
+            >
+              {countCartItems}
+            </Text>
+          </View>
+        ) : null}
       </View>
     </View>
   );
@@ -39,8 +66,8 @@ const styles = ({ backgroundColor }) =>
     subContainer: {
       marginTop: '10%',
       flexDirection: 'row',
-      justifyContent:'space-between',
-      marginHorizontal:5,
+      justifyContent: 'space-between',
+      marginHorizontal: 5,
       alignItems: 'center',
     },
     text: {
@@ -58,5 +85,6 @@ const styles = ({ backgroundColor }) =>
       flexDirection: 'row',
       justifyContent: 'flex-end',
       marginRight: 15,
+      position: 'relative',
     },
   });

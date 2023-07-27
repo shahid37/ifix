@@ -19,11 +19,16 @@ export default () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const bookings = useSelector((state) => state.bookings);
-  const [termsAccepted, setTermsAccepted ]= useState("");
-  const [termsModal, setTermsModal ]= useState(false);
-  const termsHandler = (val) => {setTermsAccepted(val)}
+  const user = useSelector((state) => state.auth);
+  const [termsAccepted, setTermsAccepted] = useState('');
+  const [termsModal, setTermsModal] = useState(false);
+  const termsHandler = (val) => {
+    setTermsAccepted(val);
+  };
   const [useRut, setUseRut] = useState(false);
-  const closeBasicModal = () =>{ setTermsModal(!termsModal)}
+  const closeBasicModal = () => {
+    setTermsModal(!termsModal);
+  };
   const leftIcon = (
     <Icon name="chevron-left" type="font-awesome-5" color="#000" size={20} />
   );
@@ -43,6 +48,9 @@ export default () => {
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
   );
+  const countCartItems = bookings.filter(
+    (booking) => booking.status === 'pending'
+  );
 
   return (
     <View style={styles.container}>
@@ -52,14 +60,19 @@ export default () => {
         color={LIGHT_PEACH}
         iconRight={rightIcon}
         leftPress={navigation.goBack}
+        countCartItems={countCartItems.length}
       />
       <PaymentInvoice bookings={bookings} termsHandler={termsHandler} />
-      <PaymentMethod bookings={bookings} terms={termsAccepted} setTermsModal={setTermsModal} />
+      <PaymentMethod
+        bookings={bookings}
+        terms={termsAccepted}
+        setTermsModal={setTermsModal}
+      />
       <MessageModal
         visible={termsModal}
         closeModal={closeBasicModal}
-        title={"Accepter villkoren"}
-        body={"Du måste acceptera villkoren innan du fortsätter."}
+        title={'Accepter villkoren'}
+        body={'Du måste acceptera villkoren innan du fortsätter.'}
       />
       <Blur />
     </View>

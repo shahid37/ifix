@@ -80,16 +80,15 @@ export const updateKlarnaStatus = async (bookingId, klarnaId) => {
 
   return axios.put(
     `${BASE_URL}/api/v1/customer/bookings/${bookingId}`,
-    {      
+    {
       klarna_order_id: klarnaId,
-      status: 1
+      status: 1,
     },
     {
       headers: headers,
     }
   );
 };
-
 
 export const updateBookingRequest = async (booking, status) => {
   const headers = await getHeaders();
@@ -118,10 +117,10 @@ export const deleteBookingRequest = async (booking) => {
 
 export const getClientToken = async () => {
   const headers = await getHeaders();
-
-  return axios.get(`${BASE_URL}/api/v1/customer/bookings/token`, {
+  const res = await axios.get(`${BASE_URL}/api/v1/customer/bookings/token`, {
     headers: headers,
   });
+  return res;
 };
 
 export const submitAuthToken = async (token) => {
