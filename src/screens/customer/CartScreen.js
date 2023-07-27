@@ -17,7 +17,6 @@ export default () => {
   const navigation = useNavigation();
   const route = useRoute();
   const service = route.params.service;
-console.log('services',service)
 
   const iconLeft = (
     <Icon name="chevron-left" type="font-awesome-5" color={BLACK} size={20} />

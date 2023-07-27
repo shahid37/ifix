@@ -14,7 +14,7 @@ import { Video } from 'expo-av';
 import { useDispatch } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import DateTimePickerModal from "react-native-modal-datetime-picker";
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import MapView, { Marker } from 'react-native-maps';
 import Geolocation from 'react-native-geolocation-service';
 import { Icon, Overlay } from 'react-native-elements';
@@ -33,18 +33,16 @@ import MessageModal from '../Modals/MessageModal';
 import moment from 'moment';
 import 'moment/locale/sv';
 
-
 const TimeWarnModal = ({ modalVisible, setModalVisible }) => {
   const dispatch = useDispatch();
 
   return (
-   
     <Modal animationType="fade" visible={modalVisible}>
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
           <View style={styles.modalHeadingContainer}>
             <Text style={styles.modalText}>
-            Du kan endast boka en tid mellan "kl. 08.00 och kl. 20.00"
+              Du kan endast boka en tid mellan "kl. 08.00 och kl. 20.00"
             </Text>
           </View>
 
@@ -96,7 +94,7 @@ export default ({ service }) => {
   const [locationModal, setLocationModal] = useState(false);
   const [isInputModal, setInputMessageModal] = useState(false);
   const [userInfo, setUserInfo] = useState({});
-  
+
   const [region, setRegion] = useState({
     latitude: 37.4219983,
     longitude: -122.084,
@@ -104,18 +102,17 @@ export default ({ service }) => {
     longitudeDelta: 0.004,
   });
 
-
   useEffect(() => {
     getUserInfo()
       .then((res) => setUser(res.data))
       .catch(() => Alert.alert('Error!', 'Unable to get user info'));
 
-      fetchAllZones() // Aziz: This will get all the zones whether they are active or not
+    fetchAllZones() // Aziz: This will get all the zones whether they are active or not
       .then((res) => {
         let data = res.data;
-        data = data.filter(function(item){
+        data = data.filter(function (item) {
           return item.is_active == true;
-       });
+        });
         setActiveZones(data);
       })
       .catch((err) => {
@@ -124,7 +121,7 @@ export default ({ service }) => {
   }, []);
 
   const setUser = (user) => {
-    setUserInfo(user)
+    setUserInfo(user);
     setFirstName(user.first_name);
     setLastName(user.last_name);
     setZip(user.postal_code);
@@ -178,38 +175,37 @@ export default ({ service }) => {
   };
 
   const matchZip = (reg) => {
-    setRegion(reg)
+    setRegion(reg);
     getLocationDetail(reg)
-    .then((res) => {
-      let data = res.data;
-      
-     if(data.status == "OK"){
- let z_code = "";
- if(data.results[0].address_components){
-   let ad_len = data.results[0].address_components.length;
-   let add_obj = data.results[0].address_components[ad_len - 1];
-   z_code = add_obj.long_name;
-   let temp=z_code;
-        temp=temp.replace(/\s+/g, '');
-   if(temp){
-     let zon_arr = activeZones;
-     zon_arr = zon_arr.filter(function(item){
-      return item.post_code == temp;
-   });
-   if(zon_arr.length > 0){
-setIsLocOk(true)
-   }else{
-    setIsLocOk(false)
-   }
-   }
+      .then((res) => {
+        let data = res.data;
 
- }
-     }else{
-       setBasicModal(true)
-     }
-    })
-    .catch(() => Alert.alert('Error!', 'Unable to get location info'));
-  }
+        if (data.status == 'OK') {
+          let z_code = '';
+          if (data.results[0].address_components) {
+            let ad_len = data.results[0].address_components.length;
+            let add_obj = data.results[0].address_components[ad_len - 1];
+            z_code = add_obj.long_name;
+            let temp = z_code;
+            temp = temp.replace(/\s+/g, '');
+            if (temp) {
+              let zon_arr = activeZones;
+              zon_arr = zon_arr.filter(function (item) {
+                return item.post_code == temp;
+              });
+              if (zon_arr.length > 0) {
+                setIsLocOk(true);
+              } else {
+                setIsLocOk(false);
+              }
+            }
+          }
+        } else {
+          setBasicModal(true);
+        }
+      })
+      .catch(() => Alert.alert('Error!', 'Unable to get location info'));
+  };
   const onChange = (event, selected) => {
     if (event.type === 'dismissed') {
       setShow(false);
@@ -226,21 +222,19 @@ setIsLocOk(true)
     }
   };
   const confirmDate = (selected) => {
+    let cur_t = moment(newTime).format('HH:mm:ss');
+    let cur_d = moment(selected).format('YYYY-MM-DD');
+    let datetimeB = moment(cur_d + ' ' + cur_t);
 
-
-   let cur_t = moment(newTime).format("HH:mm:ss");
-   let cur_d = moment(selected).format("YYYY-MM-DD");
-   let datetimeB = moment(cur_d + " " + cur_t);
-
-   console.log(datetimeB.format())
-   setNewTime(datetimeB.format());
+    console.log(datetimeB.format());
+    setNewTime(datetimeB.format());
   };
   const confirmTime = (selected) => {
-    let cur_t = moment(selected).format("HH:mm:ss");
-    let cur_d = moment(newTime).format("YYYY-MM-DD");
-    let datetimeB = moment(cur_d + " " + cur_t);
- 
-    console.log(datetimeB.locale("sv").format())
+    let cur_t = moment(selected).format('HH:mm:ss');
+    let cur_d = moment(newTime).format('YYYY-MM-DD');
+    let datetimeB = moment(cur_d + ' ' + cur_t);
+
+    console.log(datetimeB.locale('sv').format());
     setNewTime(datetimeB.format());
   };
 
@@ -254,12 +248,10 @@ setIsLocOk(true)
   const toggleLocationModal = () => {
     setLocationModal(!locationModal);
   };
-  
+
   const setInputModal = () => {
     setInputMessageModal(!isInputModal);
   };
-
-
 
   const showPicker = (currentMode) => {
     setShow(true);
@@ -292,43 +284,43 @@ setIsLocOk(true)
     };
     let curr_time = moment().format();
 
-    var hour = moment(newTime).format("HH");
+    var hour = moment(newTime).format('HH');
     var duration = moment.duration(moment(newTime).diff(curr_time));
     var differenceInHours = duration.asHours();
-    console.log(differenceInHours)
+    console.log(differenceInHours);
 
     let selected_day = moment(newTime).format();
     let difference = moment(selected_day).diff(moment(curr_time), 'days');
-    
-let total_time_required = parseInt(hour) + parseInt(count)
-if(difference < 0){
-  closeDateModal()
-}
-   else if(hour < 8 || hour > 19){
-    setModal()
-   }
-   else if(differenceInHours < 3){
-    set3modal()
-   }
-   else if(service.title !== 'Biltvätten hos dig' && service.title !== 'Däckbyte hos dig' && total_time_required > 20){
-      setModal()
-   }
-   else{
- if(service.title === 'Biltvätten hos dig' ||
-        service.title === 'Däckbyte hos dig'){
-          isLocOk ? bookingRequest(data)
+
+    let total_time_required = parseInt(hour) + parseInt(count);
+    if (difference < 0) {
+      closeDateModal();
+    } else if (hour < 8 || hour > 19) {
+      setModal();
+    } else if (differenceInHours < 3) {
+      set3modal();
+    } else if (
+      service.title !== 'Biltvätten hos dig' &&
+      service.title !== 'Däckbyte hos dig' &&
+      total_time_required > 20
+    ) {
+      setModal();
+    } else {
+      if (
+        service.title === 'Biltvätten hos dig' ||
+        service.title === 'Däckbyte hos dig'
+      ) {
+        isLocOk
+          ? bookingRequest(data)
+              .then(() => navigation.navigate(PAYMENT_SCREEN))
+              .catch(() => Alert.alert('Error!', 'Unable to add service'))
+          : toggleLocationModal();
+      } else {
+        bookingRequest(data)
           .then(() => navigation.navigate(PAYMENT_SCREEN))
-          .catch(() => Alert.alert('Error!', 'Unable to add service'))
-          : toggleLocationModal()
-        }else{
-          bookingRequest(data)
-          .then(() => navigation.navigate(PAYMENT_SCREEN))
-          .catch(() => Alert.alert('Error!', 'Unable to add service'))
-        }
-   }
-   
-     
-    
+          .catch(() => Alert.alert('Error!', 'Unable to add service'));
+      }
+    }
   };
 
   const price =
@@ -340,140 +332,143 @@ if(difference < 0){
 
   return (
     <>
-    {service.video_url && <View style={{width:"100%"}}>
-    <Video
-        ref={video}
-        style={{width:"100%", height:250}}
-        source={{
-          uri: service.video_url,
-        }}
-        useNativeControls={false}
-        resizeMode="cover"
-        isLooping
-        shouldPlay={true}
-        rate={2.0}
-        
-      />
-    </View>}
-    
+      {service.video_url && (
+        <View style={{ width: '100%' }}>
+          <Video
+            ref={video}
+            style={{ width: '100%', height: 250 }}
+            source={{
+              uri: service.video_url,
+            }}
+            useNativeControls={true}
+            resizeMode="cover"
+            isLooping
+            shouldPlay={true}
+            rate={2.0}
+          />
+        </View>
+      )}
+
       <View style={styles.row}>
-      
         <Text style={styles.leftText}>
           {count} x {service.title}
         </Text>
         <Text style={styles.rightText}>{price}</Text>
       </View>
-{userInfo.organization_number == null ? service.icon == "dot-circle" || service.icon == "car-side" ? null : (
-  <View style={styles.rutContainer}>
-        <TouchableOpacity
-          onPress={() => {
-            setModalVisible(!modalVisible);
-            dispatch(setBlur(true));
-          }}
-        >
-          <Text style={styles.rutText}>RUT-avdrag?</Text>
-        </TouchableOpacity>
-      </View>
-) : null}
-      
+      {userInfo.organization_number == null ? (
+        service.icon == 'dot-circle' || service.icon == 'car-side' ? null : (
+          <View style={styles.rutContainer}>
+            <TouchableOpacity
+              onPress={() => {
+                setModalVisible(!modalVisible);
+                dispatch(setBlur(true));
+              }}
+            >
+              <Text style={styles.rutText}>RUT-avdrag?</Text>
+            </TouchableOpacity>
+          </View>
+        )
+      ) : null}
 
       <RUTModal modalVisible={modalVisible} setModalVisible={setModalVisible} />
       <MessageModal
         visible={isBasicModal}
         closeModal={closeBasicModal}
-        title={"Du kan inte parkera här"}
-        body={"Den här parkeringen är utanför accepterad zon. Välj en ny plats nämre ditt hem."}
+        title={'Du kan inte parkera här'}
+        body={
+          'Den här parkeringen är utanför accepterad zon. Välj en ny plats nämre ditt hem.'
+        }
       />
       <MessageModal
         visible={isDateModal}
         closeModal={closeDateModal}
-        body={"Valt datum är inte giltigt."}
+        body={'Valt datum är inte giltigt.'}
       />
- <MessageModal
+      <MessageModal
         visible={isInputModal}
         closeModal={setInputModal}
-        body={"Du måste fylla i alla nödvändiga fält."}
+        body={'Du måste fylla i alla nödvändiga fält.'}
       />
-<MessageModal
+      <MessageModal
         visible={durationModal}
         closeModal={set3modal}
-        title={"Warning"}
-        body={"Du måste boka minst 3 timmar i förväg"}
+        title={'Warning'}
+        body={'Du måste boka minst 3 timmar i förväg'}
       />
       <MessageModal
         visible={locationModal}
         closeModal={toggleLocationModal}
-        title={"Warning"}
-        body={"Pinned location is not active right now"}
+        title={'Warning'}
+        body={'Pinned location is not active right now'}
       />
 
       <View>
         {service.title !== 'Hänga upp gardiner' &&
-          service.title !== 'Whiteboard- montering'&&
-          service.title !== 'TV-montering'&&
-          service.title !== 'Hänga upp tavlor/speglar' ? (
-            <View style={styles.row}>
-              <Text style={styles.left}>Antal timmar</Text>
-              <View style={styles.rightContainer}>
-                <TouchableOpacity
-                  onPress={() => count > 1 && setCount(count - 1)}
-                >
-                  <Icon
-                    name="minus-circle"
-                    type="font-awesome-5"
-                    size={25}
-                    color={SOFT_RED}
-                  />
-                </TouchableOpacity>
-                <Text style={styles.right}>{count}</Text>
-                <TouchableOpacity
-                  onPress={() =>
-                    service.prices
-                      ? count < service.prices.length && setCount(count + 1)
-                      : setCount(count + 1)
-                  }
-                >
-                  <Icon
-                    name="plus-circle"
-                    type="font-awesome-5"
-                    size={25}
-                    color={PEACH}
-                  />
-                </TouchableOpacity>
-              </View>
+        service.title !== 'Whiteboard- montering' &&
+        service.title !== 'TV-montering' &&
+        service.title !== 'Hänga upp tavlor/speglar' ? (
+          <View style={styles.row}>
+            <Text style={styles.left}>Antal timmar</Text>
+            <View style={styles.rightContainer}>
+              <TouchableOpacity
+                onPress={() => count > 1 && setCount(count - 1)}
+              >
+                <Icon
+                  name="minus-circle"
+                  type="font-awesome-5"
+                  size={25}
+                  color={SOFT_RED}
+                />
+              </TouchableOpacity>
+              <Text style={styles.right}>{count}</Text>
+              <TouchableOpacity
+                onPress={() =>
+                  service.prices
+                    ? count < service.prices.length && setCount(count + 1)
+                    : setCount(count + 1)
+                }
+              >
+                <Icon
+                  name="plus-circle"
+                  type="font-awesome-5"
+                  size={25}
+                  color={PEACH}
+                />
+              </TouchableOpacity>
             </View>
-          ) : (
-            <View style={styles.row}>
-              <Text style={styles.left}>Antal </Text>
-              <View style={styles.rightContainer}>
-                <TouchableOpacity
-                  onPress={() => count > 1 && setCount(count - 1)}
-                >
-                  <Icon
-                    name="minus-circle"
-                    type="font-awesome-5"
-                    size={25}
-                    color={SOFT_RED}
-                  />
-                </TouchableOpacity>
-                <Text style={styles.right}>{count}</Text>
-                <TouchableOpacity
-                  onPress={() =>
-                    service.prices
-                      ? count < service.prices.length && setCount(count + 1)
-                      : setCount(count + 1)
-                  }
-                >
-                  <Icon
-                    name="plus-circle"
-                    type="font-awesome-5"
-                    size={25}
-                    color={PEACH}
-                  />
-                </TouchableOpacity>
-              </View>
+          </View>
+        ) : (
+          <View style={styles.row}>
+            <Text style={styles.left}>Antal </Text>
+            <View style={styles.rightContainer}>
+              <TouchableOpacity
+                onPress={() => count > 1 && setCount(count - 1)}
+              >
+                <Icon
+                  name="minus-circle"
+                  type="font-awesome-5"
+                  size={25}
+                  color={SOFT_RED}
+                />
+              </TouchableOpacity>
+              <Text style={styles.right}>{count}</Text>
+              <TouchableOpacity
+                onPress={() =>
+                  service.prices
+                    ? count < service.prices.length && setCount(count + 1)
+                    : setCount(count + 1)
+                }
+              >
+                <Icon
+                  name="plus-circle"
+                  type="font-awesome-5"
+                  size={25}
+                  color={PEACH}
+                />
+              </TouchableOpacity>
             </View>
-          )}
+          </View>
+        )}
       </View>
 
       <View style={styles.row}>
@@ -489,7 +484,7 @@ if(difference < 0){
             color={PEACH}
             solid
           />
-          <Text style={styles.right}>{moment(newTime).format("MMM D")}</Text>
+          <Text style={styles.right}>{moment(newTime).format('MMM D')}</Text>
         </TouchableOpacity>
       </View>
 
@@ -506,9 +501,8 @@ if(difference < 0){
             color={PEACH}
             solid
           />
-          <Text style={styles.right}>{moment(newTime).format("HH:mm")}</Text>
+          <Text style={styles.right}>{moment(newTime).format('HH:mm')}</Text>
         </TouchableOpacity>
-        
       </View>
 
       {/* {show && (
@@ -521,40 +515,45 @@ if(difference < 0){
           minimumDate={time.setHours(8, 0, 0, 0)}
         />
       )} */}
-      {mode == "date" ? (
+      {mode == 'date' ? (
         <DateTimePickerModal
-        isVisible={show}
-        mode={"date"}
-        is24Hour={true}
-        
-        locale="sv_SE"
-        confirmTextIOS="Bekräfta"
-        cancelTextIOS="Avbryt"
-        display={Platform.OS=="ios" ?"inline":"default"}
-        onConfirm={(date) => {setShow(false);confirmDate(date)}}
-        onCancel={()=> setShow(false)}
-      />
+          isVisible={show}
+          mode={'date'}
+          is24Hour={true}
+          locale="sv_SE"
+          confirmTextIOS="Bekräfta"
+          cancelTextIOS="Avbryt"
+          display={Platform.OS == 'ios' ? 'inline' : 'default'}
+          onConfirm={(date) => {
+            setShow(false);
+            confirmDate(date);
+          }}
+          onCancel={() => setShow(false)}
+        />
       ) : (
         <DateTimePickerModal
-        isVisible={show}
-        minuteInterval={30}
-        mode={"time"}
-        is24Hour={true}
-        confirmTextIOS="Bekräfta"
-        cancelTextIOS="Avbryt"
-        locale="sv_SE"
-        display={Platform.OS=="ios" ?"spinner":"default"}
-        onConfirm={(date) => {setShow(false);confirmTime(date)}}
-        onCancel={()=> setShow(false)}
-      />
+          isVisible={show}
+          minuteInterval={30}
+          mode={'time'}
+          is24Hour={true}
+          confirmTextIOS="Bekräfta"
+          cancelTextIOS="Avbryt"
+          locale="sv_SE"
+          display={Platform.OS == 'ios' ? 'spinner' : 'default'}
+          onConfirm={(date) => {
+            setShow(false);
+            confirmTime(date);
+          }}
+          onCancel={() => setShow(false)}
+        />
       )}
-      
+
       <TimeWarnModal
         modalVisible={timeModalVisible}
         setModalVisible={setTimeModalVisible}
       />
 
-    {/* <KeyboardAvoidingView behavior="padding" style={keyBoardAvoidStyle.container}> */}
+      {/* <KeyboardAvoidingView behavior="padding" style={keyBoardAvoidStyle.container}> */}
       <View style={styles.inputContainer}>
         <Text style={styles.heading}>Beskriv det som ska fixas!</Text>
         <TextInput
@@ -564,7 +563,7 @@ if(difference < 0){
           onChangeText={(text) => setNotes(text)}
         />
       </View>
-    {/* </KeyboardAvoidingView> */}
+      {/* </KeyboardAvoidingView> */}
       {(service.title === 'Biltvätten hos dig' ||
         service.title === 'Däckbyte hos dig') && (
         <View style={styles.subContainer}>
@@ -621,7 +620,6 @@ if(difference < 0){
       <View style={styles.buttonBox}>
         <Button
           onPress={() => {
-            
             service.title === 'Biltvätten hos dig' ||
             service.title === 'Däckbyte hos dig'
               ? regNumber && color && carBrand && model
@@ -629,7 +627,7 @@ if(difference < 0){
                 : setInputModal()
               : setBooking(service.id);
 
-              video.current.pauseAsync();
+            video.current.pauseAsync();
           }}
           text="Lägg till varukorg"
           color={PEACH}
@@ -638,4 +636,3 @@ if(difference < 0){
     </>
   );
 };
-
