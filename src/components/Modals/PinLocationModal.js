@@ -13,13 +13,7 @@ import { RUBIK_REGULAR } from '../../constants/fonts';
 import { WHITE, black, lightOrange } from '../../constants/colors';
 
 const PinLocationModal = (props) => {
-  const initialRegion = {
-    latitude: 59.3402606,
-    latitudeDelta: 0.004,
-    longitude: 18.0661002,
-    longitudeDelta: 0.004,
-  };
-  const { visible, closeModal, service_type } = props;
+  const { visible, closeModal, service_type, initialRegion } = props;
 
   return (
     <Overlay

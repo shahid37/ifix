@@ -290,11 +290,7 @@ export default ({ booking, service }) => {
         ? '0'
         : service?.price * booking.quantity + ' kr'
       : `${service?.prices[booking.quantity - 1]} kr`;
-  console.log(
-    booking.service.title,
-    'BOOKING*************',
-    booking.coordinates
-  );
+
   const address = booking?.place;
   const zipCode = booking?.zip_code;
   const differenceInHours = getTimeDifference(booking.appointment_at);
@@ -502,6 +498,7 @@ export default ({ booking, service }) => {
         closeModal={closepinLocationModal}
         service_type={service.icon}
         visible={pinLocationModal}
+        initialRegion={booking.coordinates}
       />
     </View>
   );
