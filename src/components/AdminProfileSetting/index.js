@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Alert } from 'react-native';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import styles from './styles';
 import { Icon } from 'react-native-elements';
 import { lightOrange } from '../../constants/colors';
@@ -23,7 +23,7 @@ export default () => {
   const route = useRoute();
   const dispatch = useDispatch();
   const navigation = useNavigation();
-  const [imgURL, setImgData] = useState('');
+  const [imgURL, setImgData] = useState();
   const [imgHref, setImgHref] = useState();
   const [phNum, setPhoneNum] = useState('');
   const [first_name, setFirstName] = useState('');
@@ -40,11 +40,13 @@ export default () => {
   const [showPasswordModal, setChangePassword] = useState(false);
   const [hasChanged, setChanged] = useState(true);
 
+  // const user = useSelector((state) => state.auth);
+
+  // console.log(user, 'USER*****************');
   useEffect(() => {
     getUserInfo()
       .then((res) => {
         setUser(res.data);
-        console.log(res.data);
       })
       .catch(() => alert('Unable to get info'));
   }, []);
@@ -108,7 +110,7 @@ export default () => {
       }
     } catch (error) {
       console.log(error, 'ERROR');
-      Alert.alert('Error!', 'Unable to update fixer profile');
+      Alert.alert('Error!', 'Unable to update admin profile');
     }
     updateProfile(formData)
       .then((res) => {
@@ -121,6 +123,7 @@ export default () => {
       });
   };
 
+  console.log(imgHref, 'imgHrefimgHrefimgHref***********');
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.imgView} onPress={() => selectImage()}>

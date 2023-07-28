@@ -4,7 +4,13 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { Icon } from 'react-native-elements';
 import { Photos } from '../../components';
 import { Header } from '../../components/common';
-import { PINK,PEACH ,appColor, headerColor, lightOrange } from '../../constants/colors';
+import {
+  PINK,
+  PEACH,
+  appColor,
+  headerColor,
+  lightOrange,
+} from '../../constants/colors';
 
 export default () => {
   const navigation = useNavigation();
@@ -14,7 +20,10 @@ export default () => {
     <Icon name="chevron-left" type="font-awesome-5" color="#000" size={20} />
   );
   const headerText = (
-    <Image style={styles.headerLogo} source={require('../../assets/images/logga_ifix-logo.png')} />
+    <Image
+      style={styles.headerLogo}
+      source={require('../../assets/images/logga_ifix-logo.png')}
+    />
   );
 
   return (
@@ -25,7 +34,7 @@ export default () => {
         color={headerColor}
         leftPress={navigation.goBack}
       />
-      <Photos jobId={route.params.jobId} time={route.params.time} />
+      // <Photos jobId={route.params.jobId} time={route.params.time} />
     </View>
   );
 };
@@ -33,17 +42,17 @@ export default () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor:appColor,
+    backgroundColor: appColor,
     // backgroundColor: '#EDF6FF',
   },
   headerText: {
-    color:lightOrange,
-    fontWeight:'600',
-    fontSize:26,
+    color: lightOrange,
+    fontWeight: '600',
+    fontSize: 26,
   },
   headerLogo: {
     width: 60,
     height: 18,
-    resizeMode: "contain"
-  }
+    resizeMode: 'contain',
+  },
 });

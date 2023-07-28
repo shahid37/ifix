@@ -5,10 +5,11 @@ import { Overlay } from '../../components';
 import { Header } from '../../components/common';
 import { appColor, headerColor } from '../../constants/colors';
 import { RUBIK_REGULAR } from '../../constants/fonts';
-import RemoveEmployee from '../../components/Modals/RemoveEmployee'
-import InfoModal from '../../components/Modals/InfoModal'
+import RemoveEmployee from '../../components/Modals/RemoveEmployee';
+import InfoModal from '../../components/Modals/InfoModal';
 import BrookeDinja from '../../components/Modals/BrookeDinja';
-import SimpleModal from '../../components/Modals/SimpleModal'
+import SimpleModal from '../../components/Modals/SimpleModal';
+import AdminProfileSetting from '../../components/AdminProfileSetting';
 
 export default () => {
   const [visible, setVisible] = useState(false);
@@ -29,16 +30,16 @@ export default () => {
 
   return (
     <View style={styles.container}>
-      <Header 
-       iconLeft={leftIcon}
-       text={headerText} 
-       color={headerColor}
-       leftPress={toggleOverlay}
-        />
+      <Header
+        iconLeft={leftIcon}
+        text={headerText}
+        color={headerColor}
+        leftPress={toggleOverlay}
+      />
       <ScrollView>
-        <Text style={styles.text}>profile data to be displayed later</Text>
+        <AdminProfileSetting />
       </ScrollView>
-{/* <SimpleModal
+      {/* <SimpleModal
 visible={true}
 /> */}
       <Overlay visible={visible} toggle={toggleOverlay} />
@@ -49,7 +50,7 @@ visible={true}
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor:appColor,
+    backgroundColor: appColor,
   },
   headerText: {
     fontFamily: RUBIK_REGULAR,
